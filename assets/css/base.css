@@ -5,3 +5,4 @@ p, div, ul, li {list-style: none; margin: 0; padding: 0; box-sizing: border-box;
 
 .clear:after {content: ""; display: block; clear: both;}
 .img {width:100%;}
+a {text-decoration: none;}
