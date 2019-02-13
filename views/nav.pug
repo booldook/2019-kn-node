@@ -1,0 +1,14 @@
+doctype html
+html(lang="ko")
+  head
+    title= title
+    meta(charset="utf-8")
+    link(href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet")
+    link(href="/assets/css/base.css" rel="stylesheet")
+    link(href="/assets/css/nav.css" rel="stylesheet")
+  body
+    div(class="wrap")
+      ul(class="navs clear")
+        each page in pages
+          li(class="nav")
+            a(href="/book/"+page.id)=page.tit

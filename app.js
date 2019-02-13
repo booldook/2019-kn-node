@@ -22,24 +22,20 @@ function getQuery(req, res) {
     if(params.id == 'new') {
       res.render('wr', {title:"글쓰기"});
     }
+    else {
+      res.render('nav', {
+        title: "도서목록",
+        pages: [
+          {id:0, tit:"홍길동전"},
+          {id:1, tit:"구운몽"},
+          {id:2, tit:"태백산맥"},
+          {id:3, tit:"토끼와거북이"}
+        ]
+      });
+    }
   }
   else {
-  var html = `
-    <ul>
-      <li style="padding:1rem;list-style:none;float:left;width:20%;">
-        <a href="/page?id=0">Main</a></li>
-      <li style="padding:1rem;list-style:none;float:left;width:20%;">
-        <a href="/page?id=1">Page1</a></li>
-      <li style="padding:1rem;list-style:none;float:left;width:20%;">
-        <a href="/page?id=2">Page2</a></li>
-      <li style="padding:1rem;list-style:none;float:left;width:20%;">
-        <a href="/page?id=3">Page3</a></li>
-      <li style="clear:both;list-style:none;"></li>
-    </ul>
-    <div style="text-align:center">
-      <h1></h1>
-    </div>`; 
-    res.send(html);
+    res.send('');
   }
 }
 
