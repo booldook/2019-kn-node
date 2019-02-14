@@ -1,12 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const multer = require('multer');
 const app = express();
 const port = 3500;
+
+var upload = multer({ dest: 'uploads/' });
 
 app.locals.pretty = true;
 app.use('/', express.static('public'));
 app.use('/assets', express.static('assets'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.set('view engine', 'pug');
@@ -15,7 +19,7 @@ app.set('views', './views');
 app.get('/book', getQuery);
 app.get('/book/:id', getQuery);
 app.get('/book/:id/:mode', getQuery);
-app.post('/book/create', postQuery);
+app.post('/book/create', upload.single('upfile'), postQuery);
 
 function postQuery(req, res) {
   var tit = req.body.title;
@@ -24,19 +28,16 @@ function postQuery(req, res) {
   fs.readFile('./data/book.json', 'utf-8', function(err, data){
     if(err) res.status(500).send("Internal Server Error");
     datas = JSON.parse(data);
-    datas.books.push({
-      tit,
-      content,
-      id: datas.books[datas.books.length - 1].id + 1
-    });
+    var id = datas.books[datas.books.length - 1].id + 1;
+    datas.books.push({tit, content, id});
     str = JSON.stringify(datas);
     fs.writeFile('./data/book.json', str, (err) => {
       if(err) res.status(500).send("Internal Server Error");
-      else {
-        var pugData = {pages: datas.books};
-        pugData.title = "도서 목록";
-        res.render('li', pugData);
-      }
+      else res.redirect("/book/"+id);
+        //res.send(`<script>location.href="/book/${id}"</script>`);
+        //res.redirect("/book/"+id);
+        //res.writeHead(301, {Location: '/book/'+id});
+        //res.end();
     });
   });
 }

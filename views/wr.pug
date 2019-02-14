@@ -4,11 +4,13 @@ block top
   div
 
 block content
-  form(method="post" action="/book/create")
+  form(method="post" action="/book/create" enctype="multipart/form-data")
     h3(class="w3-padding") 신규 도서 등록
     ul(class="w3-padding wr_form")
       li(class="w3-padding")
         input(type="text" name="title" placeholder="책제목" class="w3-input w3-border")
+      li(class="w3-padding")
+        input(type="file" name="upfile" class="w3-input w3-border")
       li(class="w3-padding")
         textarea(name="content" placeholder="책내용" class="w3-input w3-border")
       li(class="w3-padding w3-center")
