@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const multer = require('multer');
+const db = require('./mysql_conn');
+const mysql = db.mysql;
+const conn = db.conn;
 
 const app = express();
 const port = 3500;
@@ -13,7 +16,6 @@ const storage = multer.diskStorage({
       else return month+1;
     }
     var folder = "uploads/book/"+String(date.getFullYear()).substr(2)+getMonth(date.getMonth())+"/";
-    console.log(folder);
     if(!fs.existsSync(folder)) {
       fs.mkdir(folder, (err) => {
         if(!err) cb(null, folder);
@@ -41,7 +43,7 @@ app.get('/book/:id', getQuery);
 app.get('/book/:id/:mode', getQuery);
 app.post('/book/create', upload.single('upfile'), postQuery);
 
-function postQuery(req, res) {
+function postQuery(req, res, next) {
   var tit = req.body.title;
   var content = req.body.content;
   var str = "";
@@ -51,6 +53,12 @@ function postQuery(req, res) {
     var id = datas.books[datas.books.length - 1].id + 1;
     datas.books.push({tit, content, id});
     str = JSON.stringify(datas);
+    var sql = " INSERT INTO books SET title=?, content=?, filename=? ";
+    var params = [tit, content, 'byul.jpg'];
+    conn.query(sql, params, (err, rows, field) => {
+      if(err) console.log(err);
+      else console.log(rows, next);
+    });
     fs.writeFile('./data/book.json', str, (err) => {
       if(err) res.status(500).send("Internal Server Error");
       else res.redirect("/book/"+id);
