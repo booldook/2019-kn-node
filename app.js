@@ -18,20 +18,23 @@ app.get('/book/:id/:mode', getQuery);
 
 function getQuery(req, res) {
   var params = req.params;
-  var pageTits = ["MAIN", "PAGE1", "PAGE2", "PAGE3"];
+  var datas = null;
+  fs.readFile('./data/nav.json', 'utf-8', function(err, data){
+    if(err) res.status(500).send("Internal Server Error");
+    datas = JSON.parse(data);
+  });
   if(typeof params.id !== 'undefined') {
     if(params.id == 'new') {
-      res.render('wr', {title:"글쓰기"});
+      res.render('wr', {
+        title: "도서목록",
+        pages: datas.books
+      });
     }
     else {
-      fs.readFile('./data/nav.json', 'utf-8', function(err, data){
-        if(err) res.status(500).send("Internal Server Error");
-        var datas = JSON.parse(data);
-        res.render('nav', {
-          title: "도서목록",
-          pages: datas.books
-        });
-      })
+      res.render('li', {
+        title: "도서목록",
+        pages: datas.books
+      });
     }
   }
   else {
