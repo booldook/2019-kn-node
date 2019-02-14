@@ -33,7 +33,9 @@ function postQuery(req, res) {
     fs.writeFile('./data/book.json', str, (err) => {
       if(err) res.status(500).send("Internal Server Error");
       else {
-        res.send('저장 성공');
+        var pugData = {pages: datas.books};
+        pugData.title = "도서 목록";
+        res.render('li', pugData);
       }
     });
   });
