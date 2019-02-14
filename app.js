@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const app = express();
 const port = 3500;
 
@@ -23,15 +24,14 @@ function getQuery(req, res) {
       res.render('wr', {title:"글쓰기"});
     }
     else {
-      res.render('nav', {
-        title: "도서목록",
-        pages: [
-          {id:0, tit:"홍길동전"},
-          {id:1, tit:"구운몽"},
-          {id:2, tit:"태백산맥"},
-          {id:3, tit:"토끼와거북이"}
-        ]
-      });
+      fs.readFile('./data/nav.json', 'utf-8', function(err, data){
+        if(err) res.status(500).send("Internal Server Error");
+        var datas = JSON.parse(data);
+        res.render('nav', {
+          title: "도서목록",
+          pages: datas.books
+        });
+      })
     }
   }
   else {
