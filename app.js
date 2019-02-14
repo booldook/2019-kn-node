@@ -2,10 +2,30 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const multer = require('multer');
+
 const app = express();
 const port = 3500;
-
-var upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    var date = new Date();
+    var getMonth = (month) => {
+      if(month+1<10) return "0"+(month+1);
+      else return month+1;
+    }
+    var folder = "uploads/book/"+String(date.getFullYear()).substr(2)+getMonth(date.getMonth())+"/";
+    console.log(folder);
+    if(!fs.existsSync(folder)) {
+      fs.mkdir(folder, (err) => {
+        if(!err) cb(null, folder);
+      });
+    }
+    else cb(null, folder);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+var upload = multer({ storage: storage });
 
 app.locals.pretty = true;
 app.use('/', express.static('public'));
