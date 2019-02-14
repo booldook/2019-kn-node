@@ -22,24 +22,24 @@ function getQuery(req, res) {
   fs.readFile('./data/nav.json', 'utf-8', function(err, data){
     if(err) res.status(500).send("Internal Server Error");
     datas = JSON.parse(data);
-  });
-  if(typeof params.id !== 'undefined') {
-    if(params.id == 'new') {
-      res.render('wr', {
-        title: "도서목록",
-        pages: datas.books
-      });
+    if(typeof params.id !== 'undefined') {
+      if(params.id == 'new') {
+        res.render('wr', {
+          title: "신규글 작성",
+          pages: datas.books
+        });
+      }
+      else {
+        res.render('li', {
+          title: "도서목록",
+          pages: datas.books
+        });
+      }
     }
     else {
-      res.render('li', {
-        title: "도서목록",
-        pages: datas.books
-      });
+      res.send('');
     }
-  }
-  else {
-    res.send('');
-  }
+  });
 }
 
 /*

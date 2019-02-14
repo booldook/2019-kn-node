@@ -8,9 +8,9 @@ html(lang="ko")
     link(href="/assets/css/nav.css" rel="stylesheet")
   body
     div(class="wrap")
-      div(class="w3-padding w3-orange w3-center")
-        a(href="/book/new") 신규서적등록
+      block top
       ul(class="navs clear")
         each page in pages
           li(class="nav")
             a(href="/book/"+page.id)= page.tit
+      block content
