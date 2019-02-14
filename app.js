@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-var upload = multer({ storage: storage });
+var upload = multer({ storage, fileFilter });
 
 app.locals.pretty = true;
 app.use('/', express.static('public'));
@@ -127,6 +127,15 @@ app.get('/info', (req, res) => {
   </html>`;
   res.send(html);
 });
+
+// multer 확장자 체크
+function fileFilter (req, file, cb) {
+  var filename = file.originalname.split('.');
+  var ext = filename[filename.length-1];
+  var allowExt = "jpg|gif|jpeg|png";
+  if(allowExt.includes(ext)) cb(null, true);
+  else cb(null, false);
+}
 
 //RESTful
 //app.get('/', (req, res) => res.send('Hello World!~~~~~~~'));
